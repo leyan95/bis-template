@@ -102,7 +102,7 @@ INSERT INTO `t_table_name_id` VALUES ('000018', 'T_USER', '0018', NULL);
 INSERT INTO `t_table_name_id` VALUES ('000019', 'T_USER_ROLE', '0019', NULL);
 INSERT INTO `t_table_name_id` VALUES ('000020', 'T_GROUP', '0020', NULL);
 INSERT INTO `t_table_name_id` VALUES ('000021', 'T_SERVICE', '0021', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000022', 'TBL_ORDER', '0022', NULL);
+INSERT INTO `t_table_name_id` VALUES ('999999', 'TBL_ORDER', '9999', NULL);
 
 -- ----------------------------
 -- Table structure for t_station_class

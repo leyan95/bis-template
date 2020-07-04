@@ -8,6 +8,7 @@ import org.hv.template.domain.aggregation.Order;
 import org.hv.template.domain.port.in.OrderWorkUnitPort;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.Serializable;
 
@@ -25,7 +26,7 @@ public class OrderController {
 
     @Action(actionId = "detail_order", authId = "order_read")
     @ApiOperation(value = "查看订单信息")
-    public Body detailOrder(@RequestBody Serializable identify) throws Exception {
+    public Body detailOrder(@RequestParam Serializable identify) throws Exception {
         return Body.success().title("成功").message("添加订单信息成功。").data(this.orderWorkUnitPort.detail(identify));
     }
 

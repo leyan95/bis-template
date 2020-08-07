@@ -6,7 +6,7 @@ server:
 pocket:
   datasource:
     node:
-      - url: jdbc:mysql://127.0.0.1:3306/basic?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
+      - url: jdbc:mysql://127.0.0.1:3306/biscuits_demo?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
         nodeName: mysql-01
         driverName: com.mysql.cj.jdbc.Driver
         showSql: true
@@ -18,5 +18,5 @@ pocket:
         session: biscuits,template
 
 biscuits:
-  serverId: 002
-  stationId: 00501
+  serverId: "002"
+  stationId: "00501"

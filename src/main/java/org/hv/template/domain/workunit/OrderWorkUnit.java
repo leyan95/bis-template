@@ -27,7 +27,7 @@ public class OrderWorkUnit extends AbstractService implements OrderWorkUnitPort 
 
     @Override
     public Order addOrder(Order order) throws Exception {
-        int effectRow = this.orderPersistencePort.saveWithTrack(order, false, "ADMIN", "新建订单信息。");
+        int effectRow = this.orderPersistencePort.saveWithTrack(order, true, "ADMIN", "新建订单信息。");
         if (effectRow > 0) {
             return order;
         }
@@ -36,7 +36,7 @@ public class OrderWorkUnit extends AbstractService implements OrderWorkUnitPort 
 
     @Override
     public Order updateOrder(Order order) throws Exception {
-        int effectRow = this.orderPersistencePort.updateWithTrack(order, false, "ADMIN", "编辑订单信息。");
+        int effectRow = this.orderPersistencePort.updateWithTrack(order, true, "ADMIN", "编辑订单信息。");
         if (effectRow > 0) {
             return order;
         }

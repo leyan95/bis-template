@@ -1,25 +1,29 @@
 package org.hv.template.domain.aggregation;
 
-import org.hv.biscuits.spine.AbstractBisEntity;
+import org.hv.biscuits.spine.AbstractWithOperatorEntity;
 import org.hv.pocket.annotation.Column;
 import org.hv.pocket.annotation.Entity;
+import org.hv.pocket.annotation.OneToMany;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity(table = "TBL_ORDER")
-public class Order extends AbstractBisEntity {
+public class Order extends AbstractWithOperatorEntity {
 
     @Column
-    private String orderCode;
+    private String code;
     @Column
     private BigDecimal price;
+    @OneToMany(clazz = OrderDetail.class, bridgeField = "orderUuid")
+    private List<OrderDetail> detailList;
 
-    public String getOrderCode() {
-        return orderCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setOrderCode(String orderCode) {
-        this.orderCode = orderCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public BigDecimal getPrice() {
@@ -28,5 +32,13 @@ public class Order extends AbstractBisEntity {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public List<OrderDetail> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<OrderDetail> detailList) {
+        this.detailList = detailList;
     }
 }

@@ -1,5 +1,6 @@
 package org.hv.template.domain.workunit;
 
+import org.hv.biscuits.annotation.Affairs;
 import org.hv.biscuits.annotation.Service;
 import org.hv.biscuits.service.AbstractService;
 import org.hv.template.domain.aggregation.Order;
@@ -26,6 +27,7 @@ public class OrderWorkUnit extends AbstractService implements OrderWorkUnitPort 
     }
 
     @Override
+    @Affairs
     public Order addOrder(Order order) throws Exception {
         int effectRow = this.orderPersistencePort.saveWithTrack(order, true, "ADMIN", "新建订单信息。");
         if (effectRow > 0) {
@@ -35,6 +37,7 @@ public class OrderWorkUnit extends AbstractService implements OrderWorkUnitPort 
     }
 
     @Override
+    @Affairs
     public Order updateOrder(Order order) throws Exception {
         int effectRow = this.orderPersistencePort.updateWithTrack(order, true, "ADMIN", "编辑订单信息。");
         if (effectRow > 0) {
@@ -44,6 +47,7 @@ public class OrderWorkUnit extends AbstractService implements OrderWorkUnitPort 
     }
 
     @Override
+    @Affairs
     public Order deleteOrder(Order order) throws Exception {
         int effectRow = this.orderPersistencePort.deleteWithTrack(order, "ADMIN", "删除订单信息");
         if (effectRow > 0) {

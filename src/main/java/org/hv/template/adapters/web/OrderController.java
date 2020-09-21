@@ -8,9 +8,6 @@ import org.hv.template.domain.aggregation.Order;
 import org.hv.template.domain.port.in.OrderWorkUnitPort;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.io.Serializable;
 
 /**
  * @author wujianc
@@ -24,27 +21,9 @@ public class OrderController {
         this.orderWorkUnitPort = orderWorkUnitPort;
     }
 
-    @Action(actionId = "detail_order", authId = "order_read")
-    @ApiOperation(value = "查看订单信息")
-    public Body detailOrder(@RequestParam Serializable identify) throws Exception {
-        return Body.success().title("成功").message("添加订单信息成功。").data(this.orderWorkUnitPort.detail(identify));
-    }
-
     @Action(actionId = "add_order", authId = "order_manage", method = RequestMethod.POST)
     @ApiOperation(value = "添加订单信息")
     public Body addOrder(@RequestBody Order order) throws Exception {
-        return Body.success().title("成功").message("添加订单信息成功。").data(this.orderWorkUnitPort.addOrder(order));
-    }
-
-    @Action(actionId = "update_order", authId = "order_manage", method = RequestMethod.POST)
-    @ApiOperation(value = "编辑订单信息")
-    public Body updateOrder(@RequestBody Order order) throws Exception {
-        return Body.success().title("成功").message("编辑订单信息成功。").data(this.orderWorkUnitPort.updateOrder(order));
-    }
-
-    @Action(actionId = "delete_order", authId = "order_manage", method = RequestMethod.POST)
-    @ApiOperation(value = "删除订单信息")
-    public Body deleteOrder(@RequestBody Order order) throws Exception {
-        return Body.success().title("成功").message("删除订单信息成功。").data(this.orderWorkUnitPort.deleteOrder(order));
+        return Body.success().title("成功").message("添加订单信息成功。").data(this.orderWorkUnitPort.createOrder(order));
     }
 }

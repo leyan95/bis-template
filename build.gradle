@@ -36,7 +36,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'com.github.leyan95:biscuits:0.2.57.PRE'
+    implementation 'com.github.leyan95:biscuits:0.3.18.PRE'
     implementation 'mysql:mysql-connector-java:8.0.13'
     implementation 'com.oracle:ojdbc6:11.2.0'
 

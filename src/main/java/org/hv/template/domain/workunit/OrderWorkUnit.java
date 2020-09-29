@@ -27,6 +27,7 @@ public class OrderWorkUnit extends AbstractService implements OrderWorkUnitPort 
         int effectRow = this.orderPersistencePort.saveWithTrack(order, true, "ADMIN", "新建订单信息。");
         if (effectRow > 0) {
             // NOTE: 发布事件通知扣减库存
+            // TODO: 多个并行
             EvenCenter.getInstance().fireEven(EVEN_ORDER_CREATE, order);
             return order;
         }

@@ -1,5 +1,36 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : Home
+ Source Server Type    : MySQL
+ Source Server Version : 80015
+ Source Host           : localhost:3306
+ Source Schema         : biscuits_demo
+
+ Target Server Type    : MySQL
+ Target Server Version : 80015
+ File Encoding         : 65001
+
+ Date: 03/12/2020 09:21:48
+*/
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for t_actor
+-- ----------------------------
+DROP TABLE IF EXISTS `t_actor`;
+CREATE TABLE `t_actor`  (
+  `UUID` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一标识',
+  `SERVICE_ID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '服务标识',
+  `BUNDLE_ID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模块标识',
+  `ACTOR_ID` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参与者标识',
+  `NAME` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参与者名称',
+  `DESCRIPTION` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '参与者描述',
+  `SORT` int(11) NOT NULL DEFAULT 10 COMMENT '排序码',
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_app_message
@@ -59,14 +90,6 @@ CREATE TABLE `t_app_version`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin COMMENT = 'apk版本管理' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of t_app_version
--- ----------------------------
-INSERT INTO `t_app_version` VALUES ('1', '1.1.0', 'http://10.1.11.27:8090/app.apk', '/sdcard/app.apk', 0, '有新版本发布，是否现在升级？', 'abm_ares_app', '2020-01-13 16:09:07');
-INSERT INTO `t_app_version` VALUES ('2', '1.0.1', 'http://10.1.11.27:8090/app.apk', '/sdcard/app.apk', 0, '有新版本发布，是否现在升级？', 'abc_lims_ucb_receiving_app', '2020-01-13 16:09:07');
-INSERT INTO `t_app_version` VALUES ('23', '2.0.0', 'http://10.1.11.27:8090/app.apk', '/sdcard/app.apk', 0, '有新版本发布，是否现在升级？', 'abm_ares_app', '2020-01-02 16:09:07');
-INSERT INTO `t_app_version` VALUES ('3', '1.1.0', 'http://10.1.11.27:8090/app.apk', '/sdcard/app.apk', 0, '有新版本发布，是否现在升级？', 'abc_lims_msc_app', '2020-01-14 17:29:33');
-
--- ----------------------------
 -- Table structure for t_auth_mapper
 -- ----------------------------
 DROP TABLE IF EXISTS `t_auth_mapper`;
@@ -93,41 +116,55 @@ INSERT INTO `t_auth_mapper` VALUES ('1011014', 'DEMO', '1011020', '1011038');
 -- ----------------------------
 DROP TABLE IF EXISTS `t_authority`;
 CREATE TABLE `t_authority`  (
-  `uuid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `server_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `bundle_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  PRIMARY KEY (`uuid`) USING BTREE,
-  UNIQUE INDEX `key_server_id`(`id`, `server_id`) USING BTREE
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `SERVICE_ID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `ID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `NAME` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `DESCRIPTION` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `BUNDLE_ID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  PRIMARY KEY (`UUID`) USING BTREE,
+  UNIQUE INDEX `key_server_id`(`ID`, `SERVICE_ID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_authority
 -- ----------------------------
-INSERT INTO `t_authority` VALUES ('1011020', 'DEMO', 'order_manage', '管理', '管理订单数据的权限', 'order');
-INSERT INTO `t_authority` VALUES ('1011021', 'DEMO', 'order_read', '读取', '读取订单数据的权限', 'order');
+INSERT INTO `t_authority` VALUES ('000210030050120201203000001', 'TEMPLATE', 'order_read', '查看', '订单查询权限', NULL);
+INSERT INTO `t_authority` VALUES ('000210030050120201203000002', 'TEMPLATE', 'order_manage', '管理', '订单管理权限', 'station_setting');
+
+-- ----------------------------
+-- Table structure for t_bill_type
+-- ----------------------------
+DROP TABLE IF EXISTS `t_bill_type`;
+CREATE TABLE `t_bill_type`  (
+  `UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `CODE` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `NAME` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `SERVICE_ID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`UUID`) USING BTREE,
+  UNIQUE INDEX `code_service`(`CODE`, `SERVICE_ID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_bundle
 -- ----------------------------
 DROP TABLE IF EXISTS `t_bundle`;
 CREATE TABLE `t_bundle`  (
-  `uuid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `bundle_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `bundle_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `server_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `with_auth` int(1) NULL DEFAULT NULL,
-  PRIMARY KEY (`uuid`) USING BTREE
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `BUNDLE_ID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `BUNDLE_NAME` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `SERVICE_ID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '服务ID',
+  `WITH_AUTH` int(1) NULL DEFAULT NULL COMMENT '访问该bundle是否需要权限',
+  `SORT` double(11, 2) NULL DEFAULT 0.00 COMMENT '排序码',
+  `TARGET_CLIENT` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '客户端',
+  `IMG` longblob NULL COMMENT '图标',
+  PRIMARY KEY (`UUID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_bundle
 -- ----------------------------
-INSERT INTO `t_bundle` VALUES ('1011080', 'home', '主页', 'DEMO', 0);
-INSERT INTO `t_bundle` VALUES ('1011081', 'remote', '远程调用', 'DEMO', 0);
-INSERT INTO `t_bundle` VALUES ('1011082', 'order', '订单', 'DEMO', 1);
+INSERT INTO `t_bundle` VALUES ('000210010050120201203000001', 'station_setting', '订单管理', 'TEMPLATE', 1, 0.00, 'BROWSER', NULL);
 
 -- ----------------------------
 -- Table structure for t_bundle_group
@@ -168,154 +205,207 @@ CREATE TABLE `t_department`  (
   `IS_QC` int(1) NOT NULL DEFAULT 0 COMMENT '是否质控科室',
   `IS_PURCHASE` int(1) NOT NULL DEFAULT 0 COMMENT '是否采购科室',
   `IS_CHILD` int(1) NOT NULL DEFAULT 0 COMMENT '是否含子节点',
+  `IS_COLLECT_BLOOD` int(1) NOT NULL DEFAULT 0 COMMENT '是否采血科室',
   `SYSTEM_CODE` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '业务系统对照',
-  `LEADER` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分管领导'
+  `LEADER` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分管领导',
+  `STATION_UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '血站标识',
+  PRIMARY KEY (`UUID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_department_class
+-- ----------------------------
+DROP TABLE IF EXISTS `t_department_class`;
+CREATE TABLE `t_department_class`  (
+  `UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `NAME` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `SPELL` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `SORT` double(10, 2) NULL DEFAULT NULL,
+  `ENABLE` tinyint(1) NULL DEFAULT 1,
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_department_class_relation
+-- ----------------------------
+DROP TABLE IF EXISTS `t_department_class_relation`;
+CREATE TABLE `t_department_class_relation`  (
+  `UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `DEPARTMENT_UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `CLASS_UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_device_auth
+-- ----------------------------
+DROP TABLE IF EXISTS `t_device_auth`;
+CREATE TABLE `t_device_auth`  (
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一标识',
+  `TYPE_UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备类型',
+  `DEVICE_SN` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备序列号',
+  `AUTHORISATION_CODE` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备授权码',
+  `SERVICE_ID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '所属服务标识',
+  PRIMARY KEY (`UUID`) USING BTREE,
+  UNIQUE INDEX `UK_DEVICE_AUTHORISATION`(`TYPE_UUID`, `DEVICE_SN`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_group
+-- ----------------------------
+DROP TABLE IF EXISTS `t_group`;
+CREATE TABLE `t_group`  (
+  `UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `GROUP_ID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '分组ID',
+  `GROUP_NAME` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '分组名称',
+  `SORT` double(11, 2) NULL DEFAULT NULL COMMENT '排序码',
+  `SERVICE_ID` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '服务ID',
+  `ADDITIONAL_SERVICE_ID` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附加服务ID，该分组可包含附加服务的功能点',
+  `PARENT_UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '父节点',
+  `IMG` longblob NULL COMMENT '图标',
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_group_bundle
+-- ----------------------------
+DROP TABLE IF EXISTS `t_group_bundle`;
+CREATE TABLE `t_group_bundle`  (
+  `UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `GROUP_UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `BUNDLE_UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `SORT` decimal(11, 2) NULL DEFAULT 0.00,
+  PRIMARY KEY (`UUID`) USING BTREE,
+  UNIQUE INDEX `index_group_bundle`(`GROUP_UUID`, `BUNDLE_UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_history
 -- ----------------------------
 DROP TABLE IF EXISTS `t_history`;
 CREATE TABLE `t_history`  (
-  `uuid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `operate` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `operator` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `operate_time` datetime(0) NULL DEFAULT NULL,
-  `business_uuid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `operate_content` json NULL,
-  PRIMARY KEY (`uuid`) USING BTREE
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `OPERATE` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `OPERATOR` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `OPERATE_TIME` datetime(0) NULL DEFAULT NULL,
+  `BUSINESS_UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `OPERATE_CONTENT` json NULL,
+  PRIMARY KEY (`UUID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of t_history
+-- Table structure for t_id_rule
 -- ----------------------------
-INSERT INTO `t_history` VALUES ('00200050050120200807000001', 'add', 'ADMIN', '2020-08-07 15:46:28', '00200230050120200807000004', '{\"业务\": \"新建订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"新增的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000002', 'add', 'ADMIN', '2020-08-07 15:47:01', '00200230050120200807000005', '{\"业务\": \"新建订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"新增的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000003', 'add', 'ADMIN', '2020-08-07 15:47:57', '00200230050120200807000006', '{\"业务\": \"新建订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"新增的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000004', 'edit', 'ADMIN', '2020-08-07 15:49:05', '00200230050120200807000006', '{\"业务\": \"编辑订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000005', 'edit', 'ADMIN', '2020-08-07 15:59:26', '00200230050120200807000006', '{\"业务\": \"编辑订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000006', 'edit', 'ADMIN', '2020-08-07 16:41:00', '00200230050120200807000006', '{\"业务\": \"编辑订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000007', 'edit', 'ADMIN', '2020-08-07 16:56:32', '00200230050120200807000006', '{\"业务\": \"编辑订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000008', 'edit', 'ADMIN', '2020-08-07 16:56:59', '00200230050120200807000006', '{\"业务\": \"编辑订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000009', 'edit', 'ADMIN', '2020-08-07 17:16:10', '00200230050120200807000006', '{\"业务\": \"编辑订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000010', 'edit', 'ADMIN', '2020-08-07 17:20:53', '00200230050120200807000006', '{\"业务\": \"编辑订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000011', 'edit', 'ADMIN', '2020-08-07 17:20:59', '00200230050120200807000006', '{\"业务\": \"编辑订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000012', 'edit', 'ADMIN', '2020-08-07 17:21:05', '00200230050120200807000006', '{\"业务\": \"编辑订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('00200050050120200807000013', 'edit', 'ADMIN', '2020-08-07 17:21:11', '00200230050120200807000006', '{\"业务\": \"编辑订单信息。\", \"关键数据\": {}, \"操作对象\": \"\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('1011111', 'add', 'ADMIN', '2019-09-21 00:04:33', '10101', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1568995473402\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111110', 'add', 'ADMIN', '2019-09-25 15:57:10', '101040', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569398230141\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111111', 'add', 'ADMIN', '2019-09-25 15:57:11', '101041', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569398230996\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111112', 'add', 'ADMIN', '2019-09-25 15:57:12', '101042', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569398231728\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111113', 'add', 'ADMIN', '2019-09-25 15:57:12', '101043', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569398232253\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111114', 'add', 'ADMIN', '2019-09-25 15:57:13', '101044', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569398232744\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111115', 'add', 'ADMIN', '2019-09-25 15:57:13', '101045', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569398233452\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111116', 'add', 'ADMIN', '2019-09-25 15:58:50', '101046', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569398330462\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111117', 'add', 'ADMIN', '2019-10-08 15:03:34', '101047', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570518213688\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111118', 'add', 'ADMIN', '2019-10-12 11:37:03', '101048', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570851423305\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111119', 'add', 'ADMIN', '2019-10-12 11:38:30', '101049', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570851510076\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('1011112', 'add', 'ADMIN', '2019-09-21 00:07:41', '10102', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1568995661235\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111120', 'add', 'ADMIN', '2019-10-12 11:38:56', '101050', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570851536152\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111121', 'add', 'ADMIN', '2019-10-12 11:41:55', '101051', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570851714688\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111122', 'add', 'ADMIN', '2019-10-12 12:34:14', '101052', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570854853681\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111123', 'add', 'ADMIN', '2019-10-12 12:46:46', '101053', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570855606445\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111124', 'add', 'ADMIN', '2019-10-12 13:53:52', '101054', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570859631594\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111125', 'add', 'ADMIN', '2019-10-12 13:54:23', '101055', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570859662686\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111126', 'add', 'ADMIN', '2019-10-12 14:23:20', '101056', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570861399779\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111127', 'add', 'ADMIN', '2019-10-12 14:25:08', '101057', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570861507712\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111128', 'add', 'ADMIN', '2019-10-12 14:25:15', '101058', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570861515383\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111129', 'add', 'ADMIN', '2019-10-12 14:25:36', '101059', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570861535909\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('1011113', 'add', 'ADMIN', '2019-09-21 00:21:47', '101012', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1568996507289\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111130', 'add', 'ADMIN', '2019-10-12 14:35:42', '101060', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570862142274\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111131', 'add', 'ADMIN', '2019-10-12 14:35:44', '101061', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570862143606\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111132', 'add', 'ADMIN', '2019-10-12 14:35:44', '101062', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570862144294\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111133', 'add', 'ADMIN', '2019-10-12 15:02:56', '101064', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570863776475\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111134', 'add', 'ADMIN', '2019-10-12 15:03:05', '101065', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570863785283\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111135', 'add', 'ADMIN', '2019-10-12 15:03:06', '101066', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570863786181\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111136', 'add', 'ADMIN', '2019-10-12 15:15:03', '101067', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570864502771\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111137', 'add', 'ADMIN', '2019-10-12 15:15:12', '101068', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570864512373\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111138', 'add', 'ADMIN', '2019-10-12 15:15:47', '101069', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570864546910\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111139', 'add', 'ADMIN', '2019-10-12 16:10:50', '101070', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570867850270\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('1011114', 'add', 'ADMIN', '2019-09-21 00:26:45', '101013', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1568996804537\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111140', 'add', 'ADMIN', '2019-10-12 16:10:55', '101071', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570867854982\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111141', 'add', 'ADMIN', '2019-10-12 16:14:55', '101072', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570868095197\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111142', 'add', 'ADMIN', '2019-10-12 16:16:02', '101073', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570868162241\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111143', 'add', 'ADMIN', '2019-10-12 16:16:15', '101074', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570868175393\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111144', 'add', 'ADMIN', '2019-10-12 16:23:43', '101075', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570868623095\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111145', 'add', 'ADMIN', '2019-10-12 16:33:43', '101076', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570869223234\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111146', 'add', 'ADMIN', '2019-10-12 17:12:19', '101078', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570871538892\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111147', 'add', 'ADMIN', '2019-10-12 17:16:30', '101079', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1570871789792\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111148', 'add', 'ADMIN', '2019-10-14 08:23:54', '101080', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571012633758\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111149', 'add', 'ADMIN', '2019-10-14 08:24:02', '101081', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571012641855\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('1011115', 'add', 'ADMIN', '2019-09-25 15:50:25', '101035', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569397824628\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111150', 'add', 'ADMIN', '2019-10-14 13:14:09', '101082', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571030049076\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111151', 'add', 'ADMIN', '2019-10-14 13:14:15', '101083', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571030054571\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111152', 'add', 'ADMIN', '2019-10-14 13:46:34', '101084', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571031994126\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111153', 'add', 'ADMIN', '2019-10-14 13:47:00', '101085', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571032019679\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111154', 'add', 'ADMIN', '2019-10-14 14:54:06', '101086', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571036045801\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111155', 'add', 'ADMIN', '2019-10-14 14:55:17', '101087', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571036117002\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111156', 'add', 'ADMIN', '2019-10-14 14:59:36', '101088', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571036376183\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111157', 'add', 'ADMIN', '2019-10-15 09:23:41', '101089', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571102621224\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111158', 'add', 'ADMIN', '2019-10-15 10:07:40', '101090', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571105259926\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111159', 'add', 'ADMIN', '2019-10-15 10:12:31', '101091', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571105551104\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('1011116', 'add', 'ADMIN', '2019-09-25 15:51:08', '101036', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569397839986\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111160', 'edit', 'ADMIN', '2019-10-15 10:13:22', '101091', '{\"业务\": \"更新订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"更新的数据\": {\"状态\": \"由 null 改变为 false\"}}');
-INSERT INTO `t_history` VALUES ('10111161', 'add', 'ADMIN', '2019-10-15 10:17:59', '101092', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571105879161\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111162', 'edit', 'ADMIN', '2019-10-15 10:18:33', '101092', '{\"业务\": \"更新订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"更新的数据\": {\"状态\": \"由 null 改变为 false\"}}');
-INSERT INTO `t_history` VALUES ('10111163', 'edit', 'ADMIN', '2019-10-15 10:30:18', '101092', '{\"业务\": \"更新订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"更新的数据\": {}}');
-INSERT INTO `t_history` VALUES ('10111164', 'add', 'ADMIN', '2019-10-17 08:21:54', '101093', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571271714044\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111165', 'add', 'ADMIN', '2019-10-17 08:49:30', '101094', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571273370400\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111166', 'add', 'ADMIN', '2019-10-17 08:49:33', '101095', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571273372515\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111167', 'add', 'ADMIN', '2019-10-17 08:55:37', '101096', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571273736721\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111168', 'add', 'ADMIN', '2019-10-18 16:06:37', '101097', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571385997278\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111169', 'add', 'ADMIN', '2019-10-18 16:50:26', '101098', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571388625544\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('1011117', 'add', 'ADMIN', '2019-09-25 15:51:33', '101037', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569397892903\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111170', 'add', 'ADMIN', '2019-10-18 16:51:05', '101099', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571388665267\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111171', 'add', 'ADMIN', '2019-10-18 16:52:00', '1010100', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571388720353\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111172', 'add', 'ADMIN', '2019-10-18 16:52:06', '1010101', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571388726173\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111173', 'add', 'ADMIN', '2019-10-18 16:53:05', '1010102', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571388785429\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111174', 'add', 'ADMIN', '2019-10-18 17:00:03', '1010103', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571389203252\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111175', 'add', 'ADMIN', '2019-10-18 17:02:26', '1010104', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571389346332\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111176', 'add', 'ADMIN', '2019-10-18 17:02:48', '1010105', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571389367638\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111177', 'add', 'ADMIN', '2019-10-18 17:02:48', '1010106', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571389368436\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111178', 'add', 'ADMIN', '2019-10-18 17:02:49', '1010107', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571389369103\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111179', 'add', 'ADMIN', '2019-10-18 17:03:10', '1010108', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571389389792\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('1011118', 'add', 'ADMIN', '2019-09-25 15:55:50', '101038', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569398150136\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111180', 'add', 'ADMIN', '2019-10-18 17:34:03', '1010109', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571391243228\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111181', 'add', 'ADMIN', '2019-10-22 14:54:11', '1010110', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1571727250621\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111182', 'add', 'ADMIN', '2020-01-14 13:20:04', '1010120', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": true, \"类型\": \"---\", \"编号\": \"DEMO-1578979204183\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111183', 'add', 'ADMIN', '2020-01-14 13:21:05', '1010121', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": true, \"类型\": \"---\", \"编号\": \"DEMO-1578979264874\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111184', 'add', 'ADMIN', '2020-03-16 16:39:45', '1010122', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": true, \"类型\": \"---\", \"编号\": \"DEMO-1584347984379\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('10111185', 'add', 'ADMIN', '2020-03-18 08:53:59', '1010123', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": true, \"类型\": \"---\", \"编号\": \"DEMO-1584492838703\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
-INSERT INTO `t_history` VALUES ('1011119', 'add', 'ADMIN', '2019-09-25 15:56:03', '101039', '{\"业务\": \"保存订单\", \"关键数据\": {\"类型\": \"---\"}, \"操作对象\": \"单据\", \"新增的数据\": {\"单价\": 1.1, \"日期\": \"---\", \"时间\": \"---\", \"状态\": \"---\", \"类型\": \"---\", \"编号\": \"DEMO-1569398163349\", \"排序码\": 0, \"订单支付方式\": \"---\", \"关联单据的数据标识\": \"10130\"}}');
+DROP TABLE IF EXISTS `t_id_rule`;
+CREATE TABLE `t_id_rule`  (
+  `UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `SERVICE_ID` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '服务编码',
+  `CLIENT_TYPE` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '客户端类型',
+  `BILL_TYPE` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '单据类型，关联 T_BILL_TYPE',
+  `BILL_CODE` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '单据编码',
+  `DIFF_BY_DEPT` tinyint(1) NULL DEFAULT 0 COMMENT '是否区分业务部门',
+  `DATE_FORMATTER` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '日期格式',
+  `SERIAL_LENGTH` tinyint(1) NULL DEFAULT 5 COMMENT '序号长度',
+  `RESET_RULE` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '序号清零规则',
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_mapper
 -- ----------------------------
 DROP TABLE IF EXISTS `t_mapper`;
 CREATE TABLE `t_mapper`  (
-  `uuid` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `bundle_uuid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `request_method` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `action_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `server_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `bundle_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `AUTH_ID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  PRIMARY KEY (`uuid`) USING BTREE,
-  UNIQUE INDEX `key_mapper`(`action_id`, `server_id`, `bundle_id`, `request_method`) USING BTREE
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `BUNDLE_UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `REQUEST_METHOD` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `ACTION_ID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `SERVICE_ID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `BUNDLE_ID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `AUTH_ID` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  PRIMARY KEY (`UUID`) USING BTREE,
+  UNIQUE INDEX `key_mapper`(`ACTION_ID`, `SERVICE_ID`, `BUNDLE_ID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_mapper
 -- ----------------------------
-INSERT INTO `t_mapper` VALUES ('1011030', '1011080', 'POST', 'register', 'DEMO', 'home', NULL);
-INSERT INTO `t_mapper` VALUES ('1011031', '1011080', 'POST', 'login', 'DEMO', 'home', NULL);
-INSERT INTO `t_mapper` VALUES ('1011032', '1011080', 'GET', 'welcome', 'DEMO', 'home', NULL);
-INSERT INTO `t_mapper` VALUES ('1011033', '1011081', 'GET', 'bai_du_dom', 'DEMO', 'remote', NULL);
-INSERT INTO `t_mapper` VALUES ('1011034', '1011082', 'POST', 'audit', 'DEMO', 'order', 'order_manage');
-INSERT INTO `t_mapper` VALUES ('1011035', '1011082', 'POST', 'rejection', 'DEMO', 'order', 'order_manage');
-INSERT INTO `t_mapper` VALUES ('1011036', '1011082', 'POST', 'save', 'DEMO', 'order', 'order_manage');
-INSERT INTO `t_mapper` VALUES ('1011037', '1011082', 'GET', 'list_order', 'DEMO', 'order', 'order_read');
-INSERT INTO `t_mapper` VALUES ('1011038', '1011082', 'POST', 'rejection_to_initial', 'DEMO', 'order', 'order_manage');
+INSERT INTO `t_mapper` VALUES ('000210020050120201203000001', '000210010050120201203000001', 'POST', 'add_order', 'TEMPLATE', 'station_setting', 'order_manage');
+
+-- ----------------------------
+-- Table structure for t_microservice
+-- ----------------------------
+DROP TABLE IF EXISTS `t_microservice`;
+CREATE TABLE `t_microservice`  (
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一标识',
+  `SERVICE_ID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '微服务ID',
+  `VIEW_SERVICE` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '页面服务',
+  `SORT` double(11, 2) NULL DEFAULT NULL COMMENT '排序码',
+  `ENABLE` tinyint(1) NOT NULL COMMENT '启用（0-启用，1-未启用）',
+  `IMG` longblob NULL COMMENT '图标',
+  `IP` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'localhost' COMMENT '服务器ip',
+  `PORT` int(5) NOT NULL DEFAULT 8080 COMMENT '端口号',
+  `NAME` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '微服务名称',
+  PRIMARY KEY (`UUID`) USING BTREE,
+  UNIQUE INDEX `server`(`SERVICE_ID`) USING BTREE COMMENT '服务器唯一'
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '服务器设置表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_post
+-- ----------------------------
+DROP TABLE IF EXISTS `t_post`;
+CREATE TABLE `t_post`  (
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一标识',
+  `NAME` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位名称',
+  `SPELL` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '拼音码',
+  `SORT` double NOT NULL COMMENT '排序码',
+  `ENABLE` int(11) NOT NULL COMMENT '启用',
+  `MEMO` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `SERVICE_ID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '子系统ID',
+  PRIMARY KEY (`UUID`) USING BTREE,
+  UNIQUE INDEX `index_name`(`NAME`, `SERVICE_ID`) USING BTREE,
+  UNIQUE INDEX `index_spell`(`SPELL`, `SERVICE_ID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_post_actor
+-- ----------------------------
+DROP TABLE IF EXISTS `t_post_actor`;
+CREATE TABLE `t_post_actor`  (
+  `UUID` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一标识',
+  `POST_UUID` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位标识',
+  `ACTOR_UUID` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参与者标识',
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_post_user
+-- ----------------------------
+DROP TABLE IF EXISTS `t_post_user`;
+CREATE TABLE `t_post_user`  (
+  `UUID` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一标识',
+  `POST_UUID` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位标识',
+  `USER_UUID` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参与者标识',
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_preferences
+-- ----------------------------
+DROP TABLE IF EXISTS `t_preferences`;
+CREATE TABLE `t_preferences`  (
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '                           ',
+  `ID` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '参数编号',
+  `DESCRIPTION` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '参数描述',
+  `VALUE` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '参数值',
+  `NAME` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '参数名称',
+  `STATION_CODE` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '站编码',
+  `SERVICE_ID` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '服务编号',
+  `BUNDLE_ID` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '功能点编号',
+  `REGEX` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '正则表达式',
+  `ALERT` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '提示信息',
+  PRIMARY KEY (`UUID`) USING BTREE,
+  UNIQUE INDEX `IDX_UK_PREFERENCE_ID_BUNDLE`(`ID`, `BUNDLE_ID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '首选项表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_process
@@ -331,40 +421,6 @@ CREATE TABLE `t_process`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of t_process
--- ----------------------------
-INSERT INTO `t_process` VALUES ('10111310', 'orderAuditProcessor', '101089', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111311', 'orderAuditProcessor', '101090', 'groupAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111312', 'orderAuditProcessor', '101091', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111313', 'orderAuditProcessor', '101092', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111314', 'orderAuditProcessor', '101093', 'groupAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111315', 'orderAuditProcessor', '101094', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111316', 'orderAuditProcessor', '101095', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111317', 'orderAuditProcessor', '101096', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111318', 'orderAuditProcessor', '101097', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111319', 'orderAuditProcessor', '101098', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111320', 'orderAuditProcessor', '101099', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111321', 'orderAuditProcessor', '1010100', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111322', 'orderAuditProcessor', '1010101', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111323', 'orderAuditProcessor', '1010102', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111324', 'orderAuditProcessor', '1010103', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111325', 'orderAuditProcessor', '1010104', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111326', 'orderAuditProcessor', '1010105', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111327', 'orderAuditProcessor', '1010106', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111328', 'orderAuditProcessor', '1010107', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111329', 'orderAuditProcessor', '1010108', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111330', 'orderAuditProcessor', '1010109', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111331', 'orderAuditProcessor', '1010110', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111332', 'orderAuditProcessor', '1010120', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111333', 'orderAuditProcessor', '1010121', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111334', 'orderAuditProcessor', '1010122', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('10111335', 'orderAuditProcessor', '1010123', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('1011136', 'orderAuditProcessor', '101084', 'departmentAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('1011137', 'orderAuditProcessor', '101085', 'departmentAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('1011138', 'orderAuditProcessor', '101087', 'departmentAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-INSERT INTO `t_process` VALUES ('1011139', 'orderAuditProcessor', '101088', 'directLeaderAuditNode', 'directLeaderAuditNode,departmentAuditNode,groupAuditNode');
-
--- ----------------------------
 -- Table structure for t_role
 -- ----------------------------
 DROP TABLE IF EXISTS `t_role`;
@@ -375,33 +431,53 @@ CREATE TABLE `t_role`  (
   `SORT` double NOT NULL COMMENT '排序码',
   `ENABLE` int(11) NOT NULL COMMENT '启用',
   `MEMO` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `SERVER_ID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '子系统id',
+  `SERVICE_ID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '子系统id',
+  `DEPARTMENT_UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`UUID`) USING BTREE,
   UNIQUE INDEX `UNIQUE_SPELL`(`SPELL`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_role
--- ----------------------------
-INSERT INTO `t_role` VALUES ('001', '管理员', 'ADMIN', 0, 1, '管理员', 'biscuits-server');
 
 -- ----------------------------
 -- Table structure for t_role_auth
 -- ----------------------------
 DROP TABLE IF EXISTS `t_role_auth`;
 CREATE TABLE `t_role_auth`  (
-  `uuid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `role_uuid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `auth_uuid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  PRIMARY KEY (`uuid`) USING BTREE,
-  UNIQUE INDEX `key_role_auth`(`role_uuid`, `auth_uuid`) USING BTREE
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `ROLE_UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `AUTH_UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  PRIMARY KEY (`UUID`) USING BTREE,
+  UNIQUE INDEX `key_role_auth`(`ROLE_UUID`, `AUTH_UUID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of t_role_auth
+-- Table structure for t_station
 -- ----------------------------
-INSERT INTO `t_role_auth` VALUES ('001', '001', '1011020');
-INSERT INTO `t_role_auth` VALUES ('002', '001', '1011021');
+DROP TABLE IF EXISTS `t_station`;
+CREATE TABLE `t_station`  (
+  `UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标识',
+  `NAME` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '血站名称',
+  `CODE` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标准编码',
+  `SPELL` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '拼音码',
+  `SORT` int(6) NOT NULL COMMENT '排序码',
+  `ENABLE` int(1) NOT NULL COMMENT '是否启用',
+  `PARENT_UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '上级血站标识，只针对分站有效。',
+  `CLASS_UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '血站级别标识',
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '血站表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_station_class
+-- ----------------------------
+DROP TABLE IF EXISTS `t_station_class`;
+CREATE TABLE `t_station_class`  (
+  `UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标识',
+  `NAME` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '血站级别名称',
+  `CODE` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标准编码',
+  `SPELL` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '拼音码',
+  `SORT` int(6) NOT NULL COMMENT '排序码',
+  `ENABLE` int(1) NOT NULL COMMENT '是否启用',
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '血站级别字典表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_table_name_id
@@ -409,7 +485,8 @@ INSERT INTO `t_role_auth` VALUES ('002', '001', '1011021');
 DROP TABLE IF EXISTS `t_table_name_id`;
 CREATE TABLE `t_table_name_id`  (
   `UUID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `TABLE_NAME` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '表明',
+  `SERVICE_ID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '服务',
+  `TABLE_NAME` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '表名',
   `TABLE_ID` varchar(4) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '表ID',
   `DESCRIPTION` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`UUID`) USING BTREE,
@@ -419,30 +496,28 @@ CREATE TABLE `t_table_name_id`  (
 -- ----------------------------
 -- Records of t_table_name_id
 -- ----------------------------
-INSERT INTO `t_table_name_id` VALUES ('000001', 'T_ACTOR', '0001', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000002', 'T_AUTHORITY', '0002', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000003', 'T_BUNDLE', '0003', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000004', 'T_DEPARTMENT', '0004', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000005', 'T_HISTORY', '0005', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000006', 'T_DEPARTMENT_CLASS', '0006', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000007', 'T_DEPARTMENT_CLASS_RELATION', '0007', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000008', 'T_MAPPER', '0008', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000009', 'T_POST', '0009', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000010', 'T_POST_ACTOR', '0010', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000011', 'T_POST_USER', '0011', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000012', 'T_PREFERENCES', '0012', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000013', 'T_PROCESS', '0013', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000014', 'T_ROLE', '0014', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000015', 'T_ROLE_AUTH', '0015', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000016', 'T_STATION', '0016', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000017', 'T_STATION_CLASS', '0017', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000018', 'T_USER', '0018', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000019', 'T_USER_ROLE', '0019', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000020', 'T_GROUP', '0020', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000021', 'T_MICROSERVICE', '0021', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000022', 'T_GROUP_BUNDLE', '0022', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000023', 'TBL_ORDER', '0023', NULL);
-INSERT INTO `t_table_name_id` VALUES ('000024', 'TBL_ORDER_DETAIL', '0024', NULL);
+INSERT INTO `t_table_name_id` VALUES ('1', 'TEMPLATE', 'T_BUNDLE', '1001', NULL);
+INSERT INTO `t_table_name_id` VALUES ('2', 'TEMPLATE', 'T_MAPPER', '1002', NULL);
+INSERT INTO `t_table_name_id` VALUES ('3', 'TEMPLATE', 'T_AUTHORITY', '1003', NULL);
+
+-- ----------------------------
+-- Table structure for t_td_style
+-- ----------------------------
+DROP TABLE IF EXISTS `t_td_style`;
+CREATE TABLE `t_td_style`  (
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一标识',
+  `STATION_UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '血站标识',
+  `SERVICE_ID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '服务ID',
+  `NAME` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标签名称',
+  `TYPE` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '类型',
+  `VERSION` int(32) NULL DEFAULT NULL COMMENT '版本号',
+  `SORT` double NOT NULL COMMENT '排序码',
+  `MEMO` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `JSON` json NULL COMMENT '样式串',
+  `IMG` longblob NULL COMMENT '背景',
+  `ENABLE` int(1) NULL DEFAULT NULL COMMENT '启用',
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '标签样式' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_user
@@ -451,8 +526,10 @@ DROP TABLE IF EXISTS `t_user`;
 CREATE TABLE `t_user`  (
   `UUID` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '唯一标识',
   `DEPT_UUID` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '部门标识',
-  `CODE` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '登录名',
+  `AVATAR` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '登录名',
+  `STAFF_ID` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '工号/编号',
   `NAME` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '姓名',
+  `SPELL` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '拼音码',
   `PHONE` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '移动电话',
   `PASSWORD` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'e10adc3949ba59abbe56e057f20f883e' COMMENT '密码',
   `SORT` int(6) NULL DEFAULT 10 COMMENT '排序码',
@@ -462,15 +539,9 @@ CREATE TABLE `t_user`  (
   `SIGN_PHOTO` longblob NULL COMMENT '签名图片',
   `LAST_PASSWORD_RESET_DATE` datetime(0) NULL DEFAULT NULL COMMENT '密码最后更新时间',
   `LAST_ROLE_MODIFY_DATE` datetime(0) NULL DEFAULT NULL COMMENT '角色最后分配时间',
-  `IS_MANAGER` int(1) NOT NULL DEFAULT 0 COMMENT '是否是管理员（拥有所有的权限）',
+  `IS_MANAGER` int(1) NOT NULL DEFAULT 0 COMMENT '是否单点登录管理员',
   PRIMARY KEY (`UUID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_user
--- ----------------------------
-INSERT INTO `t_user` VALUES ('001', NULL, 'ADMIN', '管理员', '119', 'e10adc3949ba59abbe56e057f20f883e', 10, 1, NULL, NULL, NULL, '2019-09-21 00:02:25', '2019-09-21 00:02:41', 1);
-INSERT INTO `t_user` VALUES ('1011061', NULL, 'a', '诶', NULL, 'e10adc3949ba59abbe56e057f20f883e', 10, 1, NULL, NULL, NULL, '2019-10-18 16:49:21', '2019-10-18 16:49:21', 0);
 
 -- ----------------------------
 -- Table structure for t_user_role
@@ -485,10 +556,22 @@ CREATE TABLE `t_user_role`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of t_user_role
+-- Table structure for t_ws_message
 -- ----------------------------
-INSERT INTO `t_user_role` VALUES ('001', '001', '001');
-INSERT INTO `t_user_role` VALUES ('002', '1011061', '001');
+DROP TABLE IF EXISTS `t_ws_message`;
+CREATE TABLE `t_ws_message`  (
+  `UUID` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `SENDER` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `SENDER_NAME` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `RECEIVER` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `RECEIVER_NAME` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `TITLE` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+  `CONTENT` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL,
+  `UNREAD` tinyint(1) NULL DEFAULT 1,
+  `SEND_TIME` datetime(0) NULL DEFAULT NULL,
+  `READ_TIME` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`UUID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = 'APP消息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tbl_order

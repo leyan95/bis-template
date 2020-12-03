@@ -1,6 +1,6 @@
 spring:
   application:
-    name: template1039
+    name: template
 server:
   port: 8000
 pocket:
@@ -14,9 +14,16 @@ pocket:
         password: root
         poolMiniSize: 5
         poolMaxSize: 50
-        timeout: 1000
-        session: biscuits,template
+        timeout: 5
+        session: biscuits,template,authentication
 
 biscuits:
-  serverId: "002"
+  token:
+    secret: shinow
+    expiration: 600000
+    refreshTime: 300000
+    tokenHead: Bearer
+  filter:
+    turnOn: true
+  serverId: "1039"
   stationId: "00501"

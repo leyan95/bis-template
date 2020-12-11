@@ -1,9 +1,9 @@
 package org.hv.template;
 
+import org.hv.biscuits.core.ActionHolder;
 import org.hv.biscuits.core.BiscuitsConfig;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -12,29 +12,29 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 /**
  * @author wujianchuan 2020/7/9 10:45
  */
-@Component
+@Configuration
 @EnableSwagger2
 public class TemplateInitialization {
     public static final String SWAGGER_SCAN_BASE_PACKAGE = "org.hv.template.adapters";
     public static final String VERSION = "1.0.0";
 
-    @Value("${biscuits.withPersistence:true}")
-    private boolean withPersistence;
-
     @Resource
     private BiscuitsConfig biscuitsConfig;
 
-    @PostConstruct
-    public void initBis() throws Exception {
-        if (withPersistence) {
-            biscuitsConfig.setDesKey("sward007").setSm4Key("sward18713839007").init();
-        }
+    @Bean
+    public ActionHolder getActionFactory() throws Exception {
+        biscuitsConfig.setDesKey("sward007").setSm4Key("sward18713839007").init();
+        ActionHolder actionFactory = ActionHolder.getInstance();
+        actionFactory.setBiscuitsDatabaseSessionId("biscuits")
+                .runWithDevelopEnvironment()
+                .persistenceMapper(actionFactory.getOwnServiceId(), actionFactory.getActionMap())
+                .persistencePermission(actionFactory.getOwnServiceId(), actionFactory.getPermissionMap());
+        return actionFactory;
     }
 
     @Bean
